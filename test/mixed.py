@@ -12,14 +12,34 @@ def naive_target_function(matrixesA, matrixesB):
     result_matrix = []
     for i in range(len(matrixesA)):
         result_matrix.append(np.matmul(matrixesA[i], matrixesB[i]))
-        if (i+1)%1000 ==0:
+        if (i+1)%(len(matrixesA)/10) ==0:
             monitoring.show_short_info()
+    result_matrix
     return result_matrix
-            
+
+
+def multiprocessing_target_function(matrixesA, matrixesB):
+    
+    # https://github.com/uqfoundation/pathos/issues/150 
+    # There is a bug in Python C core code that prevents data responses bigger than 2GB return correctly to the main thread.
+    # you need to either split the data into smaller chunks as suggested in the previous answer or not use multiprocessing for this function
+    
+    # 그리고 객체를 복사해서 Pool에 넣다보니 더 느려짐
+    # CPU 코어를 더 잘 쓰기 위한 멀티프로세싱
+    
+    cores = int(cpu_count())
+    
+    matrixesA_split = np.array_split(matrixesA, cores)
+    starmap_args = [(split, matrixesB) for split in matrixesA_split]
+    with Pool(cores) as p:
+        data = np.concatenate(p.starmap(naive_target_function, starmap_args))
+        print(f'calculation done with {cores} of cores.')
+        return data
+
             
 def test():
-    ITERATION = 5000
-    AXIS_SIZE = 600
+    ITERATION = 500
+    AXIS_SIZE = 400
     
     matrixesA = []
     matrixesB = []
@@ -33,13 +53,23 @@ def test():
     matrixesB = np.array(matrixesB)
     
     print(f'matrixes are loades.\n')
-    monitoring.show_info()
     
+    
+    # naive
     start = timer()
-    naive_target_function(matrixesA, matrixesB)
-    print(f'with naive CPU test: {timer()-start:.2f}s elapsed\n\n')
+    result1 = naive_target_function(matrixesA, matrixesB)
+    print(f'with naive CPU test: {timer()-start:.2f}s elapsed\n')
+    print(result1[0].shape, result1[0].size*len(result1), "computation")
+    
+    
+    # multiprocessing
+    start = timer()
+    result2 = multiprocessing_target_function(matrixesA, matrixesB)
+    print(f'with naive CPU test : {timer()-start:.2f}s elapsed\n')
+    print(result2[0].shape, result2[0].size*len(result2), "computation")
+   
+    
+    # Numba-CPU
+    
     
     monitoring.show_short_info()
-    
-    
-    
