@@ -16,7 +16,7 @@ def post_request(data):
     return dict_content
 
 
-# main process
+# for loop computing API test
 if __name__ == '__main__':
     
     """ Sequential test """
