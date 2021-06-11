@@ -19,10 +19,10 @@ if __name__ == '__main__':
     # Numba_Mandelbrot.Faster_test()
     
     # Numba_052releaseCUDA.overhead_test()
-    # Numba_052releaseCUDA.LibdeviceTest()
+    Numba_052releaseCUDA.LibdeviceTest()
     
-    Numba_052releaseCUDA.automic_substract_test()
+    # Numba_052releaseCUDA.automic_substract_test()
     
-    Numba_052releaseCUDA.math_test()
+    # Numba_052releaseCUDA.math_test()
     
-    Numba_052releaseCUDA.power_complex_test()
+    # Numba_052releaseCUDA.power_complex_test()

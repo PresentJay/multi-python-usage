@@ -1,0 +1,5 @@
+numpy
+gputil
+cpuinfo
+psutil
+numba
