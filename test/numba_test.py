@@ -19,12 +19,10 @@ def test(x):
 
   
 
-if __name__ == '__main__': 
-    
-    
-    test(np.arange(10))
+# if __name__ == '__main__': 
+#     test(np.arange(10))
 
-    test.parallel_diagnostics(level=4)      
+#     test.parallel_diagnostics(level=4)      
     
     # ms = [M() for _ in range(26)]
     # for m in ms:
