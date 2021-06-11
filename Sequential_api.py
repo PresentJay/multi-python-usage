@@ -27,7 +27,7 @@ if __name__ == '__main__':
         response = post_request(DATA)
         if i%10 == 0:
             temp = time.time() - temp
-            print(f'~ {i:d} trials : elapsed time {temp:.2f} s.')
+            print(f'{i:d}/{TRIAL_MAX} trials : elapsed time {temp:.2f} s.')
             temp = time.time()
     
     print(f'Duration: {time.perf_counter() - start:.2f} s elapsed.')

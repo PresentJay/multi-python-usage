@@ -1,6 +1,4 @@
-from urllib import request
-from ast import literal_eval
-import time, json
+import time
 
 TRIAL_MAX = 100000000
 
@@ -10,8 +8,12 @@ if __name__ == '__main__':
     """ Sequential test """
     
     start = time.perf_counter()
+    temp = time.time()
+    
     for i in range(1, TRIAL_MAX+1):
-        if i%1000000 == 0:
-            print(f'~ {i:d} trials : elapsed time {time.perf_counter()-start:.2f} s.')
+        if i%10000000 == 0:
+            temp = time.time() - temp
+            print(f'{i:d}/{TRIAL_MAX} trials : elapsed time {temp:.2f} s.')
+            temp = time.time()
     
     print(f'Duration: {time.perf_counter()-start:.2f} s elapsed.')

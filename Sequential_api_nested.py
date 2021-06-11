@@ -31,7 +31,7 @@ if __name__ == '__main__':
             cnt += 1
             if cnt%10 == 0:
                 temp = time.time() - temp
-                print(f'~ {cnt:d} trials : elapsed time {temp:.2f} s.')
+                print(f'{cnt:d}/{TRIAL_MAX_NESTED_1 * TRIAL_MAX_NESTED_2} trials : elapsed time {temp:.2f} s.')
                 temp = time.time()
     
     print(f'Duration: {time.perf_counter() - start:.2f} s elapsed.')
