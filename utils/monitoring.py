@@ -19,7 +19,9 @@ def get_gpu_info():
     gpulist = []
     # GPUtil.showUtilization() 
     for gpu in Gpus:
-        print(f'[GPU] {gpu.name}\t(index {gpu.id} /{len(Gpus)-1} total) | Usage {gpu.load*100:.2f}% \n\t==> [VRAM {gpu.memoryUsed/1024:2.2f} GB/ {gpu.memoryTotal/1024:2.2f} GB({gpu.memoryUtil*100:2.2f}%)]')
+        print(f'[GPU] {gpu.name}\t(index {gpu.id} /{len(Gpus)-1} total)')
+        print(f'\t==> Usage: {gpu.load*100:.2f}%')
+        print(f'[VRAM] {gpu.memoryUsed/1024:2.2f} GB/ {gpu.memoryTotal/1024:2.2f} GB({gpu.memoryUtil*100:2.2f}%)')
         
         # Press# to add information one by one GPU
         gpulist.append([ gpu.id, gpu.memoryTotal, gpu.memoryUsed,gpu.memoryUtil * 100])
@@ -44,7 +46,9 @@ def get_cpu_info():
     memused = mem.used
     totalUsage = psutil.cpu_percent()
     coreUsage = psutil.cpu_percent(percpu=True)
-    print(f'[CPU] {cpu["brand_raw"]}\t[{cpu["count"]} cores] ({totalUsage:.2f}%)\n[RAM] {memused/1024/1024/1024:.2f} GB/ {memtotal/1024/1024/1024:.2f} GB ({mempercent}%)')
+    print(f'[CPU] {cpu["brand_raw"]}\t[{cpu["count"]} cores]')
+    print(f'\t==> Usage: {totalUsage:.2f}%')
+    print(f'[RAM] {memused/1024/1024/1024:.2f} GB/ {memtotal/1024/1024/1024:.2f} GB ({mempercent}%)')
     for index, core in enumerate(coreUsage):
         print(f'[{index:2d}]{core:05.2f}%', end='  ')
         if (index+1)%8==0:
@@ -69,6 +73,13 @@ def show_monitor_iter(max_iter=10000000, delay=2):
             times += 1
         else:
             break
+        
+def simple_gpu_info():
+    Gpus = GPUtil.getGPUs()
+    # GPUtil.showUtilization() 
+    for gpu in Gpus:
+        print(f'[GPU] {gpu.name} ==> Usage: {gpu.load*100:.2f}%  /[VRAM] {gpu.memoryUsed/1024:2.2f} GB/ {gpu.memoryTotal/1024:2.2f} GB({gpu.memoryUtil*100:2.2f}%)')
+
 
 def show_info():
     time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time()))

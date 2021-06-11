@@ -1,9 +1,7 @@
-import math
 import numpy as np
 
 from utils import monitoring
-from numba import cuda, jit, prange, vectorize, guvectorize
-from sys import getsizeof
+from numba import cuda, jit
 from multiprocessing import cpu_count, Pool
 from timeit import default_timer as timer
 
@@ -14,7 +12,6 @@ def naive_target_function(matrixesA, matrixesB):
         result_matrix.append(np.matmul(matrixesA[i], matrixesB[i]))
         if (i+1)%(len(matrixesA)/10) ==0:
             monitoring.show_short_info()
-    result_matrix
     return result_matrix
 
 
@@ -35,10 +32,28 @@ def multiprocessing_target_function(matrixesA, matrixesB):
         data = np.concatenate(p.starmap(naive_target_function, starmap_args))
         print(f'calculation done with {cores} of cores.')
         return data
+    
+    
+@jit(forceobj=True)
+def matmul_append(matrixesA, matrixesB, reslist):
+    result = np.matmul(matrixesA, matrixesB)
+    reslist.append(result)
+    return reslist
+
+
+@jit(parallel=True, forceobj=True)
+def NumbaCPU_target_function(matrixesA, matrixesB, result_matrix=[]):
+    for i in range(len(matrixesA)):
+        result_matrix = matmul_append(matrixesA, matrixesB, result_matrix)
+        if (i+1)%(len(matrixesA)/10) ==0:
+            monitoring.show_short_info()
+            
+    return result_matrix
+
 
             
 def test():
-    ITERATION = 500
+    ITERATION = 200
     AXIS_SIZE = 400
     
     matrixesA = []
@@ -57,19 +72,25 @@ def test():
     
     # naive
     start = timer()
+    print('< start naive CPU >')
     result1 = naive_target_function(matrixesA, matrixesB)
-    print(f'with naive CPU test: {timer()-start:.2f}s elapsed\n')
-    print(result1[0].shape, result1[0].size*len(result1), "computation")
+    print(f'with naive CPU test: {timer()-start:.2f}s elapsed')
+    print(result1[0].shape, '*', len(result1), "computation\n")
     
     
     # multiprocessing
     start = timer()
+    print('< start multiprocessing CPU >')
     result2 = multiprocessing_target_function(matrixesA, matrixesB)
-    print(f'with naive CPU test : {timer()-start:.2f}s elapsed\n')
-    print(result2[0].shape, result2[0].size*len(result2), "computation")
+    print(f'with multiprocessing CPU test : {timer()-start:.2f}s elapsed')
+    print(result2[0].shape, '*', len(result2), "computation\n")
    
     
     # Numba-CPU
-    
+    start = timer()
+    print('< start Numba-CPU >')
+    result3 = NumbaCPU_target_function(matrixesA, matrixesB)
+    print(f'with Numba-CPU test : {timer()-start:.2f}s elapsed')
+    print(result3[0].shape, "computation\n")
     
     monitoring.show_short_info()

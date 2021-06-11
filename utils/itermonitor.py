@@ -1,3 +1,6 @@
 import monitoring
+import time
 
-monitoring.show_monitor_iter()
+while(True):
+    monitoring.simple_gpu_info()
+    time.sleep(0.5)
