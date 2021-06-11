@@ -3,17 +3,6 @@ import time
 import cpuinfo
 import psutil
 
-def show_short_info():
-    Gpus = GPUtil.getGPUs()
-    for gpu in Gpus:
-        print(f'[GPU({gpu.id}) Usage {gpu.load*100:.2f}%|VRAM {gpu.memoryUtil*100:.2f}%]',end=' ')
-    mem=psutil.virtual_memory()
-    full=psutil.cpu_percent()
-    print(f'[CPU Usage {full:.2f}%|RAM {mem.percent:.2f}%]')
-    
-    return gpu.memoryUtil*100, mem.percent
-
-
 def get_gpu_info():
     Gpus = GPUtil.getGPUs()
     gpulist = []
@@ -79,6 +68,17 @@ def simple_gpu_info():
     # GPUtil.showUtilization() 
     for gpu in Gpus:
         print(f'[GPU] {gpu.name} ==> Usage: {gpu.load*100:.2f}%  /[VRAM] {gpu.memoryUsed/1024:2.2f} GB/ {gpu.memoryTotal/1024:2.2f} GB({gpu.memoryUtil*100:2.2f}%)')
+        
+        
+def show_short_info():
+    Gpus = GPUtil.getGPUs()
+    for gpu in Gpus:
+        print(f'[GPU({gpu.id}) Usage {gpu.load*100:.2f}%|VRAM {gpu.memoryUtil*100:.2f}%]',end=' ')
+    mem=psutil.virtual_memory()
+    full=psutil.cpu_percent()
+    print(f'[CPU Usage {full:.2f}%|RAM {mem.percent:.2f}%]')
+    
+    return gpu.memoryUtil*100, mem.percent
 
 
 def show_info():
