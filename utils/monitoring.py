@@ -73,7 +73,9 @@ def show_info():
     now = time.localtime()
     print("\n\t- - - - %04d/%02d/%02d %02d:%02d:%02d - - - -" % (now.tm_year, now.tm_mon, now.tm_mday, now.tm_hour, now.tm_min, now.tm_sec))
     
-    cpu_core_usage, cpu_total_usage, cpu_mem = get_cpu_info()
+    
+    # TODO: 코어별 변동량 기록준비
+    coreUsage, totalUsage, mempercent, mempercent = get_cpu_info()
     gpu_info = get_gpu_info()
     print('- - - -')
     
