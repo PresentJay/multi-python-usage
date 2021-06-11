@@ -8,16 +8,10 @@ def show_short_info():
     for gpu in Gpus:
         print(f'[GPU({gpu.id}) Usage {gpu.load*100:.2f}%|VRAM {gpu.memoryUtil*100:.2f}%]',end=' ')
     mem=psutil.virtual_memory()
-    print(f'[CPU Usage {psutil.cpu_percent():.2f}%|RAM {mem.percent:.2f}%]')
+    full=psutil.cpu_percent()
+    print(f'[CPU Usage {full:.2f}%|RAM {mem.percent:.2f}%]')
     
     return gpu.memoryUtil*100, mem.percent
-
-def show_full_cpuinfo():
-    cpu=psutil.cpu_percent(percpu=True)
-    for core in cpu:
-        print(f'[{core:05.2f}%]', end=' ')
-    print('\n')
-    return cpu
 
 
 def get_gpu_info():
@@ -33,6 +27,14 @@ def get_gpu_info():
     return gpulist
 
 
+def show_full_cpuinfo():
+    cpu = psutil.cpu_percent(percpu=True)
+    for core in cpu:
+        print(f'[{core:05.2f}%]', end=' ')
+    print('\n')
+    return cpu
+
+
 # TODO: 코어별 사용량 변동폭을 기록할만한 것 같음
 def get_cpu_info():
     cpu = cpuinfo.get_cpu_info()
@@ -42,7 +44,7 @@ def get_cpu_info():
     memused = mem.used
     totalUsage = psutil.cpu_percent()
     coreUsage = psutil.cpu_percent(percpu=True)
-    print(f'[CPU] {cpu["brand_raw"]}\t[{cpu["count"]} cores] [Usage {totalUsage:.2f}%] \n\t==> {memused/1024/1024/1024:.2f} GB/ {memtotal/1024/1024/1024:.2f} GB({mempercent}%)')
+    print(f'[CPU] {cpu["brand_raw"]}\t[{cpu["count"]} cores] ({totalUsage:.2f}%)\n[RAM] {memused/1024/1024/1024:.2f} GB/ {memtotal/1024/1024/1024:.2f} GB ({mempercent}%)')
     for index, core in enumerate(coreUsage):
         print(f'[{index:2d}]{core:05.2f}%', end='  ')
         if (index+1)%8==0:
@@ -77,5 +79,5 @@ def show_info():
     # TODO: 코어별 변동량 기록준비
     coreUsage, totalUsage, mempercent, mempercent = get_cpu_info()
     gpu_info = get_gpu_info()
-    print('- - - -')
+    print('\n\t- - - - start experiment')
     

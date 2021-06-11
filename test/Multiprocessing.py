@@ -1,32 +1,34 @@
 import time
 import itertools
 import multiprocessing
-from utils.monitoring import show_short_info
+from utils.monitoring import show_short_info, show_full_cpuinfo
 
 """ Sequential nested loop test """
 
-def test(iter1 = 1000, iter2 = 800, iter3 = 800, benchmark=20000000):   
-    
+def test(iter1 = 500, iter2 = 800, iter3 = 800, benchmark=25000000):   
     z = range(iter1)
     y = range(iter2)
     x = range(iter3)
     
     start = time.perf_counter()
     temp = time.time()
-    cnt = 0
     
+    total = iter1 * iter2 * iter3
     
+    #Generate a list of tuples where each tuple is a combination of parameters.
+    #The list will contain all possible combinations of parameters.
+    paramlist = list(itertools.product(z, y, x))
     
-    for z in range(iter1):
-        for y in range(iter2):
-            for x in range(iter3):
-                cnt+=1
-                if cnt%benchmark == 0:
-                    temp = time.time() - temp
-                    print(f'{(cnt / (iter1 * iter2 * iter3) * 100):.2f}% progress : elapsed time {time.perf_counter()-start:.2f} s, ', end='')
-                    show_short_info()
-                    
-                    temp = time.time()
+    #Generate processes equal to the number of cores
+    pool = multiprocessing.Pool()
+
+    #Distribute the parameter sets evenly across the cores
+    res = pool.map(func, paramlist)
     
     print(f'Duration: {time.perf_counter()-start:.2f} s elapsed.')
-    
+
+# A function which will process a tuple of parameters
+def func(params):
+    z = params[0]
+    y = params[1]
+    x = params[2]
