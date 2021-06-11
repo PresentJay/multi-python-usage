@@ -17,10 +17,10 @@ def post_request(data):
     return dict_content
 
 
-# for loop computing API test
+# for nested loop computing API test
 if __name__ == '__main__':
     
-    """ Sequential nested test """
+    """ Sequential api test """
     
     start = time.perf_counter()
     temp = time.time()

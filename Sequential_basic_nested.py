@@ -3,10 +3,10 @@ import time
 TRIAL_MAX_NESTED_1 = 10000
 TRIAL_MAX_NESTED_2 = 10000
 
-# for loop computing basic test
+# for nested loop computing basic test
 if __name__ == '__main__':
     
-    """ Sequential nested test """
+    """ Sequential basic test """
     
     start = time.perf_counter()
     temp = time.time()
